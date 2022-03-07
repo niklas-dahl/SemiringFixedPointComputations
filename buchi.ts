@@ -45,7 +45,7 @@ let buchiFixpointIterationFunction = ({
   return result;
 };
 
-export function buchiFixpointIteration({
+export function buchiSolver({
   graph,
   targetSet,
 }: {
