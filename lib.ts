@@ -1,3 +1,4 @@
+import * as _ from "lodash";
 export class Vector {
   constructor(private readonly entries: Polynom[]) {}
 
@@ -20,9 +21,7 @@ export class Vector {
   static create0Vector(length: number) {
     let entries = [];
     for (let i = 0; i < length; i++) {
-      entries.push(
-        new Polynom([new Monome([new VariableExpression(Variable_0, 1)])])
-      );
+      entries.push(new Polynom([new Monome([Variable_0])]));
     }
     return new Vector(entries);
   }
@@ -30,9 +29,7 @@ export class Vector {
   static create1Vector(length: number) {
     let entries = [];
     for (let i = 0; i < length; i++) {
-      entries.push(
-        new Polynom([new Monome([new VariableExpression(Variable_1, 1)])])
-      );
+      entries.push(new Polynom([new Monome([Variable_1])]));
     }
     return new Vector(entries);
   }
@@ -94,7 +91,7 @@ export class Polynom {
 }
 
 export class Monome {
-  constructor(private readonly parts: VariableExpression[]) {
+  constructor(private readonly parts: Variable[]) {
     if (parts.length === 0) {
       throw new Error("empty monome");
     }
@@ -105,48 +102,40 @@ export class Monome {
   }
 
   includes(monome: Monome) {
+    // count per variable
     return monome.parts.every((part) => {
-      return this.parts.some((part2) => part2.equals(part));
+      return this.parts.some((part2) => part2 === part);
     });
   }
 
   simplify() {
-    return new Monome(this.parts.filter((part) => !part.is1()));
+    let cleanedVars = this.parts.filter((part) => !part.isTop());
+
+    if (cleanedVars.length === 0) {
+      cleanedVars.push(Variable_1);
+    }
+    return new Monome(cleanedVars);
   }
 
   isZero() {
-    return this.parts.some((part) => part.is0());
+    return this.parts.some((part) => part.isBottom());
   }
 
   toString() {
-    return this.parts.map((m) => m.toString()).join(" * ");
-  }
-}
+    let vars = _.countBy(this.parts, (v) => v.toString());
 
-export class VariableExpression {
-  constructor(
-    private readonly variable: Variable,
-    private readonly exp: number
-  ) {}
+    return Object.entries(vars)
+      .map(([varName, count]) => {
+        if (count === 1) {
+          return varName;
+        }
 
-  equals(varExp: VariableExpression) {
-    return this.variable === varExp.variable && this.exp === varExp.exp;
-  }
-
-  is0() {
-    return this.variable.isBottom();
-  }
-
-  is1() {
-    return this.variable.isTop();
-  }
-
-  toString() {
-    let varStr = this.variable.toString();
-    if (this.exp === 1) {
-      return varStr;
-    }
-    return `${varStr}^${this.exp}`;
+        if (count > 4) {
+          return `${varName}^∞`;
+        }
+        return `${varName}^${count}`;
+      })
+      .join(" * ");
   }
 }
 
@@ -158,7 +147,7 @@ export class Variable {
   }
 
   toPolynom() {
-    return new Polynom([new Monome([new VariableExpression(this, 1)])]);
+    return new Polynom([new Monome([this])]);
   }
 
   isBottom() {
