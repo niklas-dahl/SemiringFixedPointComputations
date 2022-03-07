@@ -1,6 +1,6 @@
 import { isEven } from "../lib/helpers";
 import { Graph, Node } from "../lib/graph";
-import { smartFixpoint } from "../lib/helpers";
+import { smartFixedPoint } from "../lib/helpers";
 import { Variable_0, Vector } from "../lib/polynom";
 
 export type ParityFunction = (node: Node) => number;
@@ -61,7 +61,7 @@ export function paritySolver(
     FixpointStart = Vector.create0Vector(nodeCount);
   }
 
-  return smartFixpoint(FixpointStart, (Z) => {
+  return smartFixedPoint(FixpointStart, (Z) => {
     console.log(
       "  ".repeat(fixpointDepth),
       `X[${fixpointDepth}]`,

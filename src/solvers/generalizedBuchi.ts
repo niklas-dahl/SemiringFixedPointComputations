@@ -1,5 +1,5 @@
 import { Graph, Node } from "../lib/graph";
-import { smartFixpoint } from "../lib/helpers";
+import { smartFixedPoint } from "../lib/helpers";
 import { Variable_0, Vector } from "../lib/polynom";
 
 let generalizedBuchiFixpointIterationFunction = ({
@@ -60,7 +60,7 @@ export function generalizedBuchiSolver({
   const nodeCount = graph.getNodes().length;
   let Y = Vector.create1Vector(nodeCount);
 
-  return smartFixpoint(Y, (Y) => {
+  return smartFixedPoint(Y, (Y) => {
     console.log("Y", Y.toString());
 
     let ZZ = [];
@@ -68,7 +68,7 @@ export function generalizedBuchiSolver({
     for (let j = 0; j < targetSets.length; j++) {
       let Z = Vector.create0Vector(nodeCount);
 
-      Z = smartFixpoint(Z, (Z) => {
+      Z = smartFixedPoint(Z, (Z) => {
         // console.log("Z", Z.toString());
 
         let nextZ = Z.getEntries().map((zEntry, nodeIndex) => {

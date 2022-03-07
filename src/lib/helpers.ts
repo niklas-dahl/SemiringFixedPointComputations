@@ -1,22 +1,39 @@
 import { Vector } from "./polynom";
 
-export function smartFixpoint(
+export function smartFixedPoint(
   Set: Vector,
-  fixPointIteration: (Set: Vector) => Vector
+  fixedPointIteration: (Set: Vector) => Vector
 ) {
   let n = Set.getEntries().length;
 
   // run n times
-  for (let j = 0; j < n; j++) {
-    Set = fixPointIteration(Set);
-  }
+  Set = computeFixedPoint(Set, fixedPointIteration, n);
 
   // ^ infinity
   Set = Set.potenzInfinity();
 
   // run n times again
-  for (let j = 0; j < n; j++) {
-    Set = fixPointIteration(Set);
+  Set = computeFixedPoint(Set, fixedPointIteration, n);
+
+  return Set;
+}
+
+export function computeFixedPoint(
+  Set: Vector,
+  fixedPointIteration: (Set: Vector) => Vector,
+  iterations: number
+) {
+  let lastSetHash = Set.toString();
+
+  for (let i = 0; i < iterations; i++) {
+    Set = fixedPointIteration(Set);
+    let newSetHash = Set.toString();
+
+    if (lastSetHash === newSetHash) {
+      // console.log("skipped", iterations - i - 1, "iterations");
+      break;
+    }
+    lastSetHash = newSetHash;
   }
 
   return Set;
