@@ -69,11 +69,22 @@ export class Polynom {
     let absorbed: Monome[] = [];
     cleanedMonomes.forEach((monomeA) => {
       cleanedMonomes.forEach((monomeB) => {
-        if (monomeA === monomeB || absorbed.includes(monomeB)) {
+        if (
+          monomeA === monomeB ||
+          absorbed.includes(monomeA) ||
+          absorbed.includes(monomeB)
+        ) {
           return;
         }
 
         if (monomeB.includes(monomeA)) {
+          false &&
+            console.log(
+              "absorbing",
+              monomeB.toString(),
+              "with",
+              monomeA.toString()
+            );
           absorbed.push(monomeB);
         }
       });
@@ -81,6 +92,9 @@ export class Polynom {
     cleanedMonomes = cleanedMonomes.filter(
       (monom) => !absorbed.includes(monom)
     );
+
+    // idempotent: a + a = a
+    // special case of absorb
 
     return new Polynom(cleanedMonomes);
   }
@@ -103,8 +117,12 @@ export class Monome {
 
   includes(monome: Monome) {
     // count per variable
-    return monome.parts.every((part) => {
-      return this.parts.some((part2) => part2 === part);
+    let vars = _.countBy(this.parts, (v) => v.toString());
+    let otherVars = _.countBy(monome.parts, (v) => v.toString());
+    let combinedVars = _.merge({}, vars, otherVars);
+
+    return Object.keys(combinedVars).every((varName) => {
+      return (otherVars[varName] || 0) <= (vars[varName] || 0);
     });
   }
 

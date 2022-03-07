@@ -4,7 +4,8 @@
   "main": "index.js",
   "license": "MIT",
   "scripts": {
-    "dev": "nodemon test.ts"
+    "dev": "nodemon main.ts",
+    "test": "nodemon test.ts"
   },
   "dependencies": {
     "@types/lodash": "^4.14.179",
