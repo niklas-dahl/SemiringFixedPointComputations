@@ -1,4 +1,4 @@
-import { buchiFixpointIteration } from "./buchi";
+import { buchiSolver } from "./buchi";
 import {
   Graph,
   Monome,
@@ -9,8 +9,7 @@ import {
   Variable_1,
   Vector,
 } from "./lib";
-
-Vector.create1Vector(3).simplify();
+import { ParityFunction, paritySolver } from "./parity";
 
 // BUCHI example
 function runBuchiExample() {
@@ -27,7 +26,7 @@ function runBuchiExample() {
 
   let targetSet = [nodeW];
 
-  buchiFixpointIteration({
+  buchiSolver({
     graph,
     targetSet,
   });
@@ -50,7 +49,7 @@ function runParityExampleAsBuchiGame() {
 
   let targetSet = [nodeW];
 
-  let Y = buchiFixpointIteration({
+  let Y = buchiSolver({
     graph,
     targetSet,
   });
@@ -74,7 +73,7 @@ function runParityExample() {
     ]
   );
 
-  let parityFunction = (node: Node) => {
+  let parityFunction: ParityFunction = (node: Node) => {
     let parityMap: [node: Node, parity: number][] = [
       [nodeU, 0],
       [nodeV, 1],
@@ -83,12 +82,14 @@ function runParityExample() {
     return parityMap.find((pair) => pair[0] === node)[1];
   };
 
-  // let Y = buchiFixpointIteration({
-  //   graph,
-  //   targetSet,
-  // });
+  let X = paritySolver({
+    graph,
+    parityFunction,
+    parityCount: 3,
+  });
 
-  // console.log("------");
-  // console.log("v:", Y.getEntry(1).toString());
+  console.log("------");
+  console.log("X", X.toString());
+  console.log("v:", X.getEntry(1).toString());
 }
 runParityExample();
