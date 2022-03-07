@@ -213,7 +213,7 @@ export class Monome {
         }
         return `${varsCombined}^${count}`;
       })
-      .join("*");
+      .join("·");
   }
 }
 

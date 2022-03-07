@@ -46,3 +46,12 @@ export function isEven(n: number) {
 export function isOdd(n: number) {
   return !isEven(n);
 }
+
+// actually harder to read
+export function superscriptNumber(n: number) {
+  let superscriptNumbers = ["⁰", "¹", "²", "³", "⁴", "⁵", "⁶", "⁷", "⁸", "⁹"];
+  return String(n)
+    .split("")
+    .map((c) => superscriptNumbers[Number(c)])
+    .join("");
+}
