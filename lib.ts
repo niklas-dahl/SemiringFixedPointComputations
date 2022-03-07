@@ -16,6 +16,26 @@ export class Vector {
   toString() {
     return "(" + this.entries.map((entry) => entry.toString()).join(", ") + ")";
   }
+
+  static create0Vector(length: number) {
+    let entries = [];
+    for (let i = 0; i < length; i++) {
+      entries.push(
+        new Polynom([new Monome([new VariableExpression(Variable_0, 1)])])
+      );
+    }
+    return new Vector(entries);
+  }
+
+  static create1Vector(length: number) {
+    let entries = [];
+    for (let i = 0; i < length; i++) {
+      entries.push(
+        new Polynom([new Monome([new VariableExpression(Variable_1, 1)])])
+      );
+    }
+    return new Vector(entries);
+  }
 }
 
 export class Polynom {
@@ -47,6 +67,24 @@ export class Polynom {
     if (cleanedMonomes.length === 0) {
       return Variable_0.toPolynom();
     }
+
+    // absorb: a + ab = a
+    let absorbed: Monome[] = [];
+    cleanedMonomes.forEach((monomeA) => {
+      cleanedMonomes.forEach((monomeB) => {
+        if (monomeA === monomeB || absorbed.includes(monomeB)) {
+          return;
+        }
+
+        if (monomeB.includes(monomeA)) {
+          absorbed.push(monomeB);
+        }
+      });
+    });
+    cleanedMonomes = cleanedMonomes.filter(
+      (monom) => !absorbed.includes(monom)
+    );
+
     return new Polynom(cleanedMonomes);
   }
 
@@ -64,6 +102,12 @@ export class Monome {
 
   multiply(monome: Monome) {
     return new Monome([...this.parts, ...monome.parts]);
+  }
+
+  includes(monome: Monome) {
+    return monome.parts.every((part) => {
+      return this.parts.some((part2) => part2.equals(part));
+    });
   }
 
   simplify() {
@@ -85,6 +129,10 @@ export class VariableExpression {
     private readonly exp: number
   ) {}
 
+  equals(varExp: VariableExpression) {
+    return this.variable === varExp.variable && this.exp === varExp.exp;
+  }
+
   is0() {
     return this.variable.isBottom();
   }
@@ -104,6 +152,10 @@ export class VariableExpression {
 
 export class Variable {
   constructor(private readonly name: string) {}
+
+  static createVariables(names: string[]) {
+    return names.map((name) => new Variable(name));
+  }
 
   toPolynom() {
     return new Polynom([new Monome([new VariableExpression(this, 1)])]);
@@ -148,17 +200,21 @@ export class Graph {
     return this.nodes[nodeIndex];
   }
 
-  getEdges(node: Node): Variable[] {
-    return this.edges[this.getNodeIndex(node)];
+  getNodes() {
+    return this.nodes;
   }
 
-  toString() {
-    return this.nodes.map((node) => node.toString()).join("\n");
+  getEdges(node: Node): Variable[] {
+    return this.edges[this.getNodeIndex(node)];
   }
 }
 
 export class Node {
   constructor(private name: string) {}
+
+  static createNodes(names: string[]) {
+    return names.map((name) => new Node(name));
+  }
 
   toString() {
     return this.name;
