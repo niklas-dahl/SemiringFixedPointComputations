@@ -1,6 +1,9 @@
 import { Graph, Node } from "../lib/graph";
 import { Variable, Variable_0 } from "../lib/polynom";
-import { generalizedBuchiSolver } from "../solvers/generalizedBuchi";
+import {
+  generalizedBuchiSolver,
+  generalizedBuchiSolverExtended,
+} from "../solvers/generalizedBuchi";
 
 export function runGeneralizedBuchiExample() {
   const [a, b, c, d, e] = Variable.createVariables(["a", "b", "c", "d", "e"]);
@@ -52,6 +55,17 @@ export function runGeneralizedBuchiProblemExample() {
   let targetSets = [[nodeU], [nodeW]];
 
   let X = generalizedBuchiSolver({
+    graph,
+    targetSets,
+  });
+
+  console.log("------");
+  console.log("Vector", X.toString());
+  console.log("V:", X.getEntry(1).toString());
+  console.log("X:", X.getEntry(3).toString());
+
+  console.log("------ extended version");
+  X = generalizedBuchiSolverExtended({
     graph,
     targetSets,
   });

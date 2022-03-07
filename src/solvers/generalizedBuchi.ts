@@ -96,3 +96,40 @@ export function generalizedBuchiSolver({
     return multiplyResult.simplify();
   });
 }
+
+export function generalizedBuchiSolverExtended({
+  graph,
+  targetSets,
+}: {
+  graph: Graph;
+  targetSets: Node[][];
+}): Vector {
+  const nodeCount = graph.getNodes().length;
+  let Y = Vector.create0Vector(nodeCount);
+
+  let normalResult = generalizedBuchiSolver({ graph, targetSets });
+
+  return smartFixedPoint(Y, (Y) => {
+    // console.log("Y", Y.toString());
+
+    let reachabilityVectorEntries = Y.getEntries().map((zEntry, nodeIndex) => {
+      let successors = graph.getEdges(graph.getNode(nodeIndex));
+      let result = Variable_0.toPolynom();
+
+      successors.forEach((edge, nodeIndex) => {
+        // edge * Y[nodeIndex]
+        let edgeValue = edge.toPolynom();
+        let zValue = Y.getEntry(nodeIndex);
+        result = result.add(edgeValue.multiply(zValue));
+
+        // NOTE: multiply with V_0 x (currently all nodes belong to player 0)
+      });
+
+      return result.simplify();
+    });
+
+    let reachabilityVector = new Vector(reachabilityVectorEntries).simplify();
+
+    return normalResult.addComponentwise(reachabilityVector).simplify();
+  });
+}

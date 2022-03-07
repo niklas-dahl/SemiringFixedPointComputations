@@ -10,8 +10,8 @@ false && runBuchiExample();
 false && runParityExampleAsBuchiGame();
 
 // PARITY
-true && runParityExample();
+false && runParityExample();
 
 // GENERALIZED BUCHI
 false && runGeneralizedBuchiExample();
-false && runGeneralizedBuchiProblemExample();
+true && runGeneralizedBuchiProblemExample();
