@@ -1,8 +1,6 @@
 import { Graph, Node } from "../lib/graph";
 import { Variable, Variable_0 } from "../lib/polynom";
-import { buchiSolver } from "../solvers/buchi";
 import { generalizedBuchiSolver } from "../solvers/generalizedBuchi";
-import { ParityFunction, paritySolver } from "../solvers/parity";
 
 export function runGeneralizedBuchiExample() {
   const [a, b, c, d, e] = Variable.createVariables(["a", "b", "c", "d", "e"]);

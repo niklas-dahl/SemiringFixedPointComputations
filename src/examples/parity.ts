@@ -1,6 +1,5 @@
 import { Graph, Node } from "../lib/graph";
 import { Variable, Variable_0 } from "../lib/polynom";
-import { buchiSolver } from "../solvers/buchi";
 import { ParityFunction, paritySolver } from "../solvers/parity";
 
 export function runParityExample() {
