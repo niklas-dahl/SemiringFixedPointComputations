@@ -35,6 +35,14 @@ export class Vector {
     return new Vector(this.entries.map((entry) => entry.potenzInfinity()));
   }
 
+  multiplyComponentwise(vector: Vector) {
+    let result = [];
+    for (let i = 0; i < this.entries.length; i++) {
+      result.push(this.entries[i].multiply(vector.entries[i]));
+    }
+    return new Vector(result);
+  }
+
   toString() {
     return "(" + this.entries.map((entry) => entry.toString()).join(", ") + ")";
   }
