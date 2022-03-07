@@ -41,7 +41,13 @@ export class Polynom {
   }
 
   simplify() {
-    return new Polynom(this.monomes.filter((monome) => !monome.isZero()));
+    let cleanedMonomes = this.monomes.map((monome) => monome.simplify());
+    cleanedMonomes = cleanedMonomes.filter((monome) => !monome.isZero());
+
+    if (cleanedMonomes.length === 0) {
+      return Variable_0.toPolynom();
+    }
+    return new Polynom(cleanedMonomes);
   }
 
   toString() {
@@ -60,8 +66,8 @@ export class Monome {
     return new Monome([...this.parts, ...monome.parts]);
   }
 
-  simplfy() {
-    return new Monome(this.parts.filter((part) => !part.is0()));
+  simplify() {
+    return new Monome(this.parts.filter((part) => !part.is1()));
   }
 
   isZero() {
@@ -121,8 +127,13 @@ class BottomVariable extends Variable {
     return true;
   }
 }
+class TopVariable extends Variable {
+  isTop(): boolean {
+    return true;
+  }
+}
 export const Variable_0 = new BottomVariable("0");
-export const Variable_1 = new Variable("1");
+export const Variable_1 = new TopVariable("1");
 
 // Graph
 

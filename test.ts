@@ -82,7 +82,7 @@ let buchiFixpointIterationFunction = ({
   let isTargetSet = nodeInTargetSet(node);
 
   let successors = graph.getEdges(node);
-  let result = new Polynom([]);
+  let result = Variable_0.toPolynom();
   if (isPlayer0 && isTargetSet) {
     // sum with Y
     successors.forEach((edge, nodeIndex) => {
@@ -114,20 +114,22 @@ let Y = create1Vector(2);
 
 function fixpointIteration() {
   let Z = create0Vector(2);
+  let iterations = 5;
 
-  console.log("Z", Z.toString());
+  for (let i = 0; i < iterations; i++) {
+    console.log("Z", Z.toString());
 
-  let nextZ = Z.getEntries().map((zEntry, nodeIndex) => {
-    return buchiFixpointIterationFunction({
-      graph,
-      node: graph.getNode(nodeIndex),
-      nodeInTargetSet,
-      Y,
-      Z,
+    let nextZ = Z.getEntries().map((zEntry, nodeIndex) => {
+      return buchiFixpointIterationFunction({
+        graph,
+        node: graph.getNode(nodeIndex),
+        nodeInTargetSet,
+        Y,
+        Z,
+      });
     });
-  });
 
-  let Z_next = new Vector(nextZ);
-  console.log("Z_next", Z_next.simplify().toString());
+    Z = new Vector(nextZ).simplify();
+  }
 }
 fixpointIteration();
