@@ -2,17 +2,17 @@ import * as _ from "lodash";
 
 export class Vector {
   static create0Vector(length: number) {
-    let entries = [];
-    for (let i = 0; i < length; i++) {
-      entries.push(new Polynom([new Monome([Variable_0])]));
-    }
-    return new Vector(entries);
+    return Vector.fillVector(new Polynom([new Monome([Variable_0])]), length);
   }
 
   static create1Vector(length: number) {
+    return Vector.fillVector(new Polynom([new Monome([Variable_1])]), length);
+  }
+
+  static fillVector(elm: Polynom, length: number) {
     let entries = [];
     for (let i = 0; i < length; i++) {
-      entries.push(new Polynom([new Monome([Variable_1])]));
+      entries.push(elm);
     }
     return new Vector(entries);
   }
