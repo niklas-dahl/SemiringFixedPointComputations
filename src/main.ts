@@ -12,6 +12,6 @@ false && runParityExampleAsBuchiGame();
 // PARITY
 false && runParityExample();
 
-// GENERALIZED BUCHI example
+// GENERALIZED BUCHI
 false && runGeneralizedBuchiExample();
 runGeneralizedBuchiProblemExample();
