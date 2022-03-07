@@ -7,18 +7,18 @@ export function smartFixedPoint(
   let n = Set.getEntries().length;
 
   // run n times
-  Set = computeFixedPoint(Set, fixedPointIteration, n);
+  Set = runFixedPointIterations(Set, fixedPointIteration, n);
 
   // ^ infinity
   Set = Set.potenzInfinity();
 
   // run n times again
-  Set = computeFixedPoint(Set, fixedPointIteration, n);
+  Set = runFixedPointIterations(Set, fixedPointIteration, n);
 
   return Set;
 }
 
-export function computeFixedPoint(
+export function runFixedPointIterations(
   Set: Vector,
   fixedPointIteration: (Set: Vector) => Vector,
   iterations: number
