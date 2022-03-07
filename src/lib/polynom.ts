@@ -52,7 +52,9 @@ export class Vector {
   }
 
   toString() {
-    return "(" + this.entries.map((entry) => entry.toString()).join(", ") + ")";
+    return (
+      "(" + this.entries.map((entry) => entry.toString()).join(", ") + ")ᵀ"
+    );
   }
 }
 
