@@ -1,23 +1,5 @@
 import * as _ from "lodash";
 export class Vector {
-  constructor(private readonly entries: Polynom[]) {}
-
-  getEntry(n: number) {
-    return this.entries[n];
-  }
-
-  getEntries() {
-    return this.entries;
-  }
-
-  simplify() {
-    return new Vector(this.entries.map((entry) => entry.simplify()));
-  }
-
-  toString() {
-    return "(" + this.entries.map((entry) => entry.toString()).join(", ") + ")";
-  }
-
   static create0Vector(length: number) {
     let entries = [];
     for (let i = 0; i < length; i++) {
@@ -32,6 +14,28 @@ export class Vector {
       entries.push(new Polynom([new Monome([Variable_1])]));
     }
     return new Vector(entries);
+  }
+
+  constructor(private readonly entries: Polynom[]) {}
+
+  getEntry(n: number) {
+    return this.entries[n];
+  }
+
+  getEntries() {
+    return this.entries;
+  }
+
+  simplify() {
+    return new Vector(this.entries.map((entry) => entry.simplify()));
+  }
+
+  potenzInfinity() {
+    return new Vector(this.entries.map((entry) => entry.potenzInfinity()));
+  }
+
+  toString() {
+    return "(" + this.entries.map((entry) => entry.toString()).join(", ") + ")";
   }
 }
 
@@ -55,6 +59,10 @@ export class Polynom {
       });
     });
     return new Polynom(resultMonomes);
+  }
+
+  potenzInfinity() {
+    return new Polynom(this.monomes.map((monom) => monom.potenzInfinity()));
   }
 
   simplify() {
@@ -104,30 +112,37 @@ export class Polynom {
   }
 }
 
+const INFINITY_COUNT_THRESHOLD = 10;
 export class Monome {
-  constructor(private readonly parts: Variable[]) {
-    if (parts.length === 0) {
+  constructor(private readonly vars: Variable[]) {
+    if (vars.length === 0) {
       throw new Error("empty monome");
     }
   }
 
   multiply(monome: Monome) {
-    return new Monome([...this.parts, ...monome.parts]);
+    return new Monome([...this.vars, ...monome.vars]);
   }
 
   includes(monome: Monome) {
     // count per variable
-    let vars = _.countBy(this.parts, (v) => v.toString());
-    let otherVars = _.countBy(monome.parts, (v) => v.toString());
+    let vars = _.countBy(this.vars, (v) => v.toString());
+    let otherVars = _.countBy(monome.vars, (v) => v.toString());
     let combinedVars = _.merge({}, vars, otherVars);
 
     return Object.keys(combinedVars).every((varName) => {
-      return (otherVars[varName] || 0) <= (vars[varName] || 0);
+      let ownCount = vars[varName] || 0;
+      let otherCount = otherVars[varName] || 0;
+
+      // cap infinity counts
+      ownCount = Math.min(INFINITY_COUNT_THRESHOLD, ownCount);
+      otherCount = Math.min(INFINITY_COUNT_THRESHOLD, otherCount);
+      return otherCount <= ownCount;
     });
   }
 
   simplify() {
-    let cleanedVars = this.parts.filter((part) => !part.isTop());
+    let cleanedVars = this.vars.filter((Var) => !Var.isTop());
 
     if (cleanedVars.length === 0) {
       cleanedVars.push(Variable_1);
@@ -136,11 +151,21 @@ export class Monome {
   }
 
   isZero() {
-    return this.parts.some((part) => part.isBottom());
+    return this.vars.some((Var) => Var.isBottom());
+  }
+
+  potenzInfinity() {
+    let infiniyMonomVars: Variable[] = [];
+    _.uniq(this.vars).forEach((Var) => {
+      for (let i = 0; i < INFINITY_COUNT_THRESHOLD; i++) {
+        infiniyMonomVars.push(Var);
+      }
+    });
+    return new Monome(infiniyMonomVars);
   }
 
   toString() {
-    let vars = _.countBy(this.parts, (v) => v.toString());
+    let vars = _.countBy(this.vars, (v) => v.toString());
 
     return Object.entries(vars)
       .map(([varName, count]) => {
@@ -148,7 +173,7 @@ export class Monome {
           return varName;
         }
 
-        if (count > 4) {
+        if (count >= INFINITY_COUNT_THRESHOLD) {
           return `${varName}^∞`;
         }
         return `${varName}^${count}`;
@@ -226,4 +251,26 @@ export class Node {
   toString() {
     return this.name;
   }
+}
+
+export function smartFixpoint(
+  Set: Vector,
+  fixPointIteration: (Set: Vector) => Vector
+) {
+  let n = Set.getEntries().length;
+
+  // run n times
+  for (let j = 0; j < n; j++) {
+    Set = fixPointIteration(Set);
+  }
+
+  // ^ infinity
+  Set = Set.potenzInfinity();
+
+  // run n times again
+  for (let j = 0; j < n; j++) {
+    Set = fixPointIteration(Set);
+  }
+
+  return Set;
 }

@@ -1,4 +1,4 @@
-import { Graph, Node, Variable_0, Vector } from "./lib";
+import { Graph, Node, smartFixpoint, Variable_0, Vector } from "./lib";
 
 let buchiFixpointIterationFunction = ({
   graph,
@@ -45,7 +45,6 @@ let buchiFixpointIterationFunction = ({
   return result;
 };
 
-const iterations = 5;
 export function buchiFixpointIteration({
   graph,
   targetSet,
@@ -56,11 +55,12 @@ export function buchiFixpointIteration({
   const nodeCount = graph.getNodes().length;
   let Y = Vector.create1Vector(nodeCount);
 
-  for (let i = 0; i < iterations; i++) {
+  return smartFixpoint(Y, (Y) => {
     console.log("Y", Y.toString());
+
     let Z = Vector.create0Vector(nodeCount);
 
-    for (let j = 0; j < iterations; j++) {
+    Z = smartFixpoint(Z, (Z) => {
       console.log("Z", Z.toString());
 
       let nextZ = Z.getEntries().map((zEntry, nodeIndex) => {
@@ -73,10 +73,10 @@ export function buchiFixpointIteration({
         });
       });
 
-      Z = new Vector(nextZ).simplify();
-    }
+      return new Vector(nextZ).simplify();
+    });
 
     console.log();
-    Y = Z;
-  }
+    return Z;
+  });
 }
