@@ -1,4 +1,5 @@
 import * as _ from "lodash";
+
 export class Vector {
   static create0Vector(length: number) {
     let entries = [];
@@ -218,59 +219,3 @@ class TopVariable extends Variable {
 }
 export const Variable_0 = new BottomVariable("0");
 export const Variable_1 = new TopVariable("1");
-
-// Graph
-
-export class Graph {
-  constructor(private nodes: Node[], private edges: Variable[][]) {}
-
-  getNodeIndex(node: Node): number {
-    return this.nodes.indexOf(node);
-  }
-
-  getNode(nodeIndex: number) {
-    return this.nodes[nodeIndex];
-  }
-
-  getNodes() {
-    return this.nodes;
-  }
-
-  getEdges(node: Node): Variable[] {
-    return this.edges[this.getNodeIndex(node)];
-  }
-}
-
-export class Node {
-  constructor(private name: string) {}
-
-  static createNodes(names: string[]) {
-    return names.map((name) => new Node(name));
-  }
-
-  toString() {
-    return this.name;
-  }
-}
-
-export function smartFixpoint(
-  Set: Vector,
-  fixPointIteration: (Set: Vector) => Vector
-) {
-  let n = Set.getEntries().length;
-
-  // run n times
-  for (let j = 0; j < n; j++) {
-    Set = fixPointIteration(Set);
-  }
-
-  // ^ infinity
-  Set = Set.potenzInfinity();
-
-  // run n times again
-  for (let j = 0; j < n; j++) {
-    Set = fixPointIteration(Set);
-  }
-
-  return Set;
-}

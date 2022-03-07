@@ -1,14 +1,7 @@
 import { buchiSolver } from "./solvers/buchi";
-import {
-  Graph,
-  Monome,
-  Node,
-  Polynom,
-  Variable,
-  Variable_0,
-  Variable_1,
-  Vector,
-} from "./lib/lib";
+import { Graph, Node } from "./lib/graph";
+import { smartFixpoint } from "./lib/helpers";
+import { Variable, Variable_0, Vector } from "./lib/polynom";
 import { ParityFunction, paritySolver } from "./solvers/parity";
 
 // BUCHI example

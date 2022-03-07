@@ -1,4 +1,4 @@
-import { Monome, Polynom, Variable } from "./lib/lib";
+import { Monome, Polynom, Variable } from "./lib/polynom";
 
 const [a, b, c] = Variable.createVariables(["a", "b", "c"]);
 
