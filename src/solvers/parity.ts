@@ -1,5 +1,5 @@
-import { isEven } from "./helpers";
-import { Graph, Node, smartFixpoint, Variable_0, Vector } from "./lib";
+import { isEven } from "../lib/helpers";
+import { Graph, Node, smartFixpoint, Variable_0, Vector } from "../lib/lib";
 
 export type ParityFunction = (node: Node) => number;
 

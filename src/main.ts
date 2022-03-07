@@ -1,4 +1,4 @@
-import { buchiSolver } from "./buchi";
+import { buchiSolver } from "./solvers/buchi";
 import {
   Graph,
   Monome,
@@ -8,8 +8,8 @@ import {
   Variable_0,
   Variable_1,
   Vector,
-} from "./lib";
-import { ParityFunction, paritySolver } from "./parity";
+} from "./lib/lib";
+import { ParityFunction, paritySolver } from "./solvers/parity";
 
 // BUCHI example
 function runBuchiExample() {

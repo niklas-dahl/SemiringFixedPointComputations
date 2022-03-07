@@ -1,4 +1,4 @@
-import { Graph, Node, smartFixpoint, Variable_0, Vector } from "./lib";
+import { Graph, Node, smartFixpoint, Variable_0, Vector } from "../lib/lib";
 
 let buchiFixpointIterationFunction = ({
   graph,
