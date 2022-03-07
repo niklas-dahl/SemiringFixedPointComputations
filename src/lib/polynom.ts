@@ -182,20 +182,38 @@ export class Monome {
   }
 
   toString() {
-    let vars = _.countBy(this.vars, (v) => v.toString());
+    // vars = ['a', 'a', 'b', 'b', 'c'];
+    // let varCount = [{count: 2, vars: ['a', 'b']}, {count: 1, vars: ['c']}]
 
-    return Object.entries(vars)
-      .map(([varName, count]) => {
+    let varCount = _.chain(this.vars)
+      .map((vr) => vr.toString())
+      .groupBy()
+      .mapValues((x) => Math.min(x.length, INFINITY_COUNT_THRESHOLD))
+      .toPairs()
+      .groupBy((x) => x[1])
+      .mapValues((x) => _.map(x, (y) => y[0]))
+      .toPairs()
+      .map((x) => ({ count: +x[0], vars: x[1] }))
+      .value();
+
+    return varCount
+      .map(({ count, vars }) => {
+        let varsCombined = vars.join("");
+
+        if (vars.length > 1) {
+          varsCombined = `(${varsCombined})`;
+        }
+
         if (count === 1) {
-          return varName;
+          return varsCombined;
         }
 
         if (count >= INFINITY_COUNT_THRESHOLD) {
-          return `${varName}^∞`;
+          return `${varsCombined}^∞`;
         }
-        return `${varName}^${count}`;
+        return `${varsCombined}^${count}`;
       })
-      .join(" * ");
+      .join("*");
   }
 }
 
