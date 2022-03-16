@@ -1,6 +1,6 @@
 import { Graph, Node } from "../lib/graph";
 import { Variable, Variable_0 } from "../lib/polynom";
-import { ParityFunction, paritySolver } from "../solvers/parity";
+import { ParityFunction, paritySolver } from "../explicitSolvers/parity";
 
 export function runParityExample() {
   const [a, b, c, d, e] = Variable.createVariables(["a", "b", "c", "d", "e"]);

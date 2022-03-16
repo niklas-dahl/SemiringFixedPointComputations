@@ -1,6 +1,6 @@
 import { Graph, Node } from "../lib/graph";
 import { Variable, Variable_0 } from "../lib/polynom";
-import { buchiSolver } from "../solvers/buchi";
+import { buchiSolver } from "../explicitSolvers/buchi";
 
 // BUCHI example
 export function runBuchiExample() {

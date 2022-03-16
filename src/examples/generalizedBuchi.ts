@@ -3,7 +3,7 @@ import { Variable, Variable_0 } from "../lib/polynom";
 import {
   generalizedBuchiSolver,
   generalizedBuchiSolverExtended,
-} from "../solvers/generalizedBuchi";
+} from "../explicitSolvers/generalizedBuchi";
 
 export function runGeneralizedBuchiExample() {
   const [a, b, c, d, e] = Variable.createVariables(["a", "b", "c", "d", "e"]);
