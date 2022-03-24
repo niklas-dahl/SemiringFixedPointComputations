@@ -1,6 +1,7 @@
 import { Graph, Node } from "../lib/graph";
 import { Variable, Variable_0 } from "../lib/polynom";
 import { buchiSolver } from "../explicitSolvers/buchi";
+import { buchiSolverLFP } from "../formulars/buchi";
 
 // BUCHI example
 export function runBuchiExample() {
@@ -21,6 +22,20 @@ export function runBuchiExample() {
     graph,
     targetSet,
   });
+
+  // with LFP solver
+  let win0 = buchiSolverLFP({
+    nodes: [nodeV, nodeW],
+    nodesV0: [nodeV, nodeW],
+    nodesV1: [],
+    labeledEdges: [
+      [[nodeV, nodeV], a],
+      [[nodeV, nodeW], b],
+      [[nodeW, nodeW], c],
+    ],
+    targetSet,
+  });
+  console.log("win0(v)", win0(nodeV).toString());
 }
 
 // parity example as BUCHI game
